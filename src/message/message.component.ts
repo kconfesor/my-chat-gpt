@@ -7,15 +7,15 @@ import {FormControl} from "@angular/forms";
   templateUrl: './message.component.html'
 })
 export class MessageComponent {
-  loading$ = this.openAiService.loading$;
+  loading$ = this.openaiService.loading$;
   message = new FormControl('');
 
-  constructor(private openAiService: OpenaiService) {
+  constructor(private openaiService: OpenaiService) {
 
   }
 
   async onSendMessage() {
-    await this.openAiService.sendMessage(this.message.value ?? '');
+    await this.openaiService.sendMessage(this.message.value ?? '');
     this.message.setValue('');
   }
 }

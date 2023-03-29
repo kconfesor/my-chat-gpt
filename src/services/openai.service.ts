@@ -15,6 +15,8 @@ export class OpenaiService {
   private loading = new BehaviorSubject<boolean>(false);
   public messages$ = this.messages.asObservable();
   public loading$ = this.loading.asObservable();
+  private error = new BehaviorSubject<{ code: number, message: string } | undefined>(undefined);
+  public error$ = this.error.asObservable();
 
   constructor(private store: Store) {
     this.loadConversation().then(() => console.log('loaded conversation'));
@@ -30,6 +32,15 @@ export class OpenaiService {
     await this.store.set(this.OPEN_AI_KEY, apiKey);
   }
 
+  async hasApiKey() {
+    return await this.store.has(this.OPEN_AI_KEY);
+  }
+
+  async clearConversation() {
+    this.messages.next([]);
+    await this.store.delete(this.CONVERSATION);
+  }
+
   private async init() {
     if (!this.openAiApi) {
       const apiKey = await this.store.get(this.OPEN_AI_KEY) as string;
@@ -41,36 +52,42 @@ export class OpenaiService {
     }
   }
 
-  async sendMessage(message: string){
+  async sendMessage(message: string) {
     if (!message) {
-        return;
+      return;
     }
     this.loading.next(true);
     await this.init();
     const messages = [...this.messages.value];
     messages.push({role: "user", content: message});
 
-    const completion = await this.openAiApi?.createChatCompletion({
-      model: "gpt-3.5-turbo", //fixed for now
-      messages: messages,
-    });
+    try {
+      const completion = await this.openAiApi?.createChatCompletion({
+        model: "gpt-3.5-turbo", //fixed for now maybe make it configurable later
+        messages: messages,
+      });
 
-    if (completion?.status !== 200) {
-      console.error(completion?.statusText);
-      return;
-    }
-
-    if (completion.data.choices.length > 0) {
-      const choice = completion?.data.choices[0];
-
-      if (choice?.message) {
-        messages.push(choice.message);
-        this.messages.next(messages);
+      if (completion?.status !== 200) {
+        this.error.next({code: completion?.status ?? 500, message: completion?.statusText ?? 'Unknown error'});
+        return;
       }
-    }
 
-    await this.store.set(this.CONVERSATION, messages);
-    await this.store.save();
-    this.loading.next(false);
+      if (completion.data.choices.length > 0) {
+        const choice = completion?.data.choices[0];
+
+        if (choice?.message) {
+          messages.push(choice.message);
+          this.messages.next(messages);
+        }
+      }
+
+      await this.store.set(this.CONVERSATION, messages);
+      await this.store.save();
+    } catch (error: any) {
+      const errorResponse = error?.response;
+      this.error.next({code: errorResponse?.status, message: errorResponse?.data?.error?.message ?? 'Unknown error'});
+    } finally {
+      this.loading.next(false);
+    }
   }
 }
