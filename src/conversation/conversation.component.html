@@ -1,0 +1,14 @@
+<div class="max-w-750 mx-auto pt-10">
+    <div class="space-y-6 pb-20 mb-14" *ngIf="(conversations | async) as messages">
+        <div *ngFor="let message of messages; let i = index"
+             class="flex rounded-md max-w-800 px-25 py-18 p-5"
+             [ngClass]="message.role === 'assistant' ? 'ml-auto bg-black/50': 'mr-auto bg-black/20'">
+            <markdown clipboard lineHighlight lineNumbers class="prose prose-sm prose-invert max-w-none" [data]="message.content" [id]="'message_' + i"></markdown>
+        </div>
+<!--        <div class="py-0 m-0" id="messages-end"></div>-->
+        <div class="fixed bottom-2 max-w-800 w-[calc(100%-7rem)] h-auto" id="message-input">
+            <app-message></app-message>
+        </div>
+    </div>
+
+</div>
