@@ -1,21 +1,11 @@
-import { Component } from '@angular/core';
-import {OpenaiService} from "../services/openai.service";
-import {FormControl} from "@angular/forms";
+import {Component, Input} from '@angular/core';
+import {ChatCompletionRequestMessage} from "openai";
 
 @Component({
   selector: 'app-message',
   templateUrl: './message.component.html'
 })
 export class MessageComponent {
-  loading$ = this.openaiService.loading$;
-  message = new FormControl('');
+  @Input() message: ChatCompletionRequestMessage | undefined;
 
-  constructor(private openaiService: OpenaiService) {
-
-  }
-
-  async onSendMessage() {
-    await this.openaiService.sendMessage(this.message.value ?? '');
-    this.message.setValue('');
-  }
 }

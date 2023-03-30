@@ -36,6 +36,10 @@ export class OpenaiService {
     return await this.store.has(this.OPEN_AI_KEY);
   }
 
+  async clearKey() {
+    await this.store.delete(this.OPEN_AI_KEY);
+  }
+
   async clearConversation() {
     this.messages.next([]);
     await this.store.delete(this.CONVERSATION);

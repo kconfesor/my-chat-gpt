@@ -1,12 +1,7 @@
 <div class="max-w-750 mx-auto pt-10">
     <div class="space-y-6" *ngIf="(conversations$ | async) as messages">
-        <div *ngFor="let message of messages;"
-             class="flex rounded-md max-w-800 px-25 py-18 p-5"
-             [ngClass]="message.role === 'assistant' ? 'ml-auto bg-black/50': 'mr-auto bg-black/20'">
-<!--            <div class="flex-shrink-0">-->
-<!--                <div class="h-10 w-10 rounded-full" alt="">K</div>-->
-<!--            </div>-->
-            <markdown clipboard lineHighlight lineNumbers class="prose prose-sm prose-invert max-w-none" [data]="message.content"></markdown>
+        <div *ngFor="let message of messages;let i = index">
+            <app-message [message]="message"></app-message>
         </div>
         <div *ngIf="(errors$ | async) as error" class="flex p-4 mb-4 text-sm text-red-400 bg-black/90 border border-gray-200 rounded-lg bg-gray-800 dark:text-red-400 border-red-800" role="alert">
             <svg aria-hidden="true" class="flex-shrink-0 inline w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
@@ -15,16 +10,22 @@
                 <span class="font-medium">Sending failed</span> {{error.message}}
             </div>
         </div>
-        <div *ngIf="messages.length > 0" class="flex justify-end">
-            <button type="button" (click)="onDeleteConversation()" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                <svg class="w-5 h-5 mr-2 -ml-1" fill="currentColor" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path>
-                </svg>
-                Clear
-            </button>
+        <div class="flex justify-end">
+            <div *ngIf="messages.length > 0" class="flex justify-end">
+                <button type="button" (click)="onChangeKey()" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    Change Api Key
+                    <svg aria-hidden="true" class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                </button>
+                <button type="button" (click)="onDeleteConversation()" class="ml-2 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    <svg class="w-5 h-5 mr-2 -ml-1" fill="currentColor" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path>
+                    </svg>
+                    Clear
+                </button>
+            </div>
         </div>
-        <div id="message-input">
-            <app-message></app-message>
+        <div id="send-message-input">
+            <app-send-message></app-send-message>
         </div>
     </div>
 </div>

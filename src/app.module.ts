@@ -5,15 +5,17 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConversationComponent } from './conversation/conversation.component';
 import { Store } from "tauri-plugin-store-api";
-import { MessageComponent } from './message/message.component';
-import { HomeComponent } from './home/home.component';
+import { SendMessageComponent } from './send-message/send-message.component';
 import {MarkdownModule} from "ngx-markdown";
 import {ReactiveFormsModule} from "@angular/forms";
+import { MessageComponent } from './message/message.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ConversationComponent,
+    SendMessageComponent,
     MessageComponent,
     HomeComponent
   ],

@@ -1,5 +1,6 @@
-import {ChangeDetectionStrategy, Component, OnDestroy} from '@angular/core';
-import {OpenaiService} from "../services/openai.service";
+import {ChangeDetectionStrategy, Component, HostListener, OnDestroy} from '@angular/core';
+import {OpenaiService} from "../core/openai.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-conversation',
@@ -15,7 +16,7 @@ export class ConversationComponent implements OnDestroy{
     }
   });
 
-  constructor(private openaiService: OpenaiService) {
+  constructor(private openaiService: OpenaiService, private router: Router) {
 
   }
 
@@ -23,12 +24,25 @@ export class ConversationComponent implements OnDestroy{
     await this.openaiService.clearConversation()
   }
 
+  async onChangeKey(){
+    await this.openaiService.clearKey();
+    await this.router.navigate(['/']);
+  }
+
   scrollToBottom(): void {
-    const el = document.getElementById('message-input');
+    const el = document.getElementById('send-message-input');
     el?.scrollIntoView({behavior: "smooth"});
   }
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.key === 'ArrowUp' && !event.shiftKey) {
+      console.log(event);
+      //todo: go throw history
+    }
   }
 }
