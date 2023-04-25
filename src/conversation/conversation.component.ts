@@ -41,7 +41,6 @@ export class ConversationComponent implements OnDestroy{
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     if (event.key === 'ArrowUp' && !event.shiftKey) {
-      console.log(event);
       //todo: go throw history
     }
   }

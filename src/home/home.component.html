@@ -2,7 +2,7 @@
     <label for="error" class="block mb-2 text-sm font-medium text-white dark:text-red-500">Enter your OpenApi key</label>
     <div class="flex justify-items-center">
         <div class="flex-1">
-            <input type="text" id="error" [formControl]="apiKey" class="bg-blue-50 border border-blu-400 text-white placeholder-white text-sm rounded-lg focus:ring-blue-400 bg-black/40 focus:border-blue-400 block w-full p-2.5 dark:text-blue-400 dark:placeholder-blue-400 dark:border-blue-400">
+            <input type="text" id="error" [formControl]="apiKey" class="bg-black/50 border border-blu-400 text-white placeholder-white text-sm rounded-lg focus:ring-blue-400 bg-black/40 focus:border-blue-400 block w-full p-2.5 dark:text-blue-400 dark:placeholder-blue-400 dark:border-blue-400">
             <p class="mt-2 text-sm text-red-400 dark:text-red-400" *ngIf="apiKey.errors && apiKey.dirty"><span class="font-medium">Required</span> ApiKey is required. Please enter the key.</p>
         </div>
         <div class="ml-2">
